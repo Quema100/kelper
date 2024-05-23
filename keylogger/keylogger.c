@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #define SERVERPORT 3000
-#define BUFSIZE 2048
+#define BUFSIZE 1024
 
 // 소켓 함수 오류 출력 후 종료
 void err_quit(const char* msg)
@@ -42,7 +42,7 @@ void send_post_request(const char* server_ip, int port, const char* path, const 
     SOCKET s;
     struct sockaddr_in server = { 0 };
     char request[BUFSIZE];
-    char response[BUFSIZE+1];
+    char response[BUFSIZE];
     int recv_size;
 
     // Winsock 초기화
@@ -79,13 +79,29 @@ void send_post_request(const char* server_ip, int port, const char* path, const 
 
     // 서버 응답 수신
     recv_size = recv(s, response, BUFSIZE, 0);
+ 
     if (recv_size == SOCKET_ERROR)
-        err_quit("recv()");
-
-    // 응답 출력
-    response[recv_size] = '\0';
-    printf("Response received:\n%s\n", response);
-
+    {
+        err_display("recv()");
+    }
+    else if (recv_size == 0)
+    {
+        printf("No more data received from the server.\n");
+    }
+    else
+    {
+        // 응답 출력
+        if (recv_size >= BUFSIZE)
+        {
+            // 수신된 데이터의 크기가 버퍼의 크기를 초과하는 경우
+            response[BUFSIZE - 1] = '\0'; // 버퍼의 끝에 null 문자 추가
+        }
+        else
+        {
+            response[recv_size] = '\0'; // 수신된 데이터의 크기에 맞게 null 문자 추가
+        }
+        printf("Response received:\n%s\n", response);
+    }
     // 소켓 닫기
     closesocket(s);
     WSACleanup();
