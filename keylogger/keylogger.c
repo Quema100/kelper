@@ -1,4 +1,6 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define _WINSOCK_DEPRECATED_NO_WARNINGS // ìµœì‹  VC++ ì»´íŒŒì¼ ì‹œ ê²½ê³  ë°©ì§€
+#define _CRT_SECURE_NO_WARNINGS
+
 #pragma comment(lib, "ws2_32")
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -6,9 +8,9 @@
 #include <stdio.h>
 
 #define SERVERPORT 3000
-#define BUFSIZE 1024
+#define BUFSIZE 512
 
-// ¼ÒÄÏ ÇÔ¼ö ¿À·ù Ãâ·Â ÈÄ Á¾·á
+// ì†Œì¼“ í•¨ìˆ˜ ì˜¤ë¥˜ ì¶œë ¥ í›„ ì¢…ë£Œ
 void err_quit(const char* msg)
 {
     LPVOID lpMsgBuf = NULL;
@@ -17,12 +19,12 @@ void err_quit(const char* msg)
         NULL, WSAGetLastError(),
         MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
         (LPTSTR)&lpMsgBuf, 0, NULL);
-    printf("[%s] %s", msg, (char*)lpMsgBuf);
+    MessageBox(NULL, (LPCTSTR)lpMsgBuf,(LPCWSTR)msg, MB_ICONERROR);
     LocalFree(lpMsgBuf);
     exit(1);
 }
 
-// ¼ÒÄÏ ÇÔ¼ö ¿À·ù Ãâ·Â
+// ì†Œì¼“ í•¨ìˆ˜ ì˜¤ë¥˜ ì¶œë ¥
 void err_display(const char* msg)
 {
     LPVOID lpMsgBuf = NULL;
@@ -35,84 +37,83 @@ void err_display(const char* msg)
     LocalFree(lpMsgBuf);
 }
 
-// Node.js ¼­¹ö¿¡ POST ¿äÃ» º¸³»±â
+// Node.js ì„œë²„ì— POST ìš”ì²­ ë³´ë‚´ê¸°
 void send_post_request(const char* server_ip, int port, const char* path, const char* json_data)
 {
     WSADATA wsa;
     SOCKET s;
     struct sockaddr_in server = { 0 };
     char request[BUFSIZE];
-    char response[BUFSIZE];
+    char response[BUFSIZE] = "\0";
     int recv_size;
 
-    // Winsock ÃÊ±âÈ­
+    // Winsock ì´ˆê¸°í™”
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
         err_quit("WSAStartup()");
 
-    // ¼ÒÄÏ »ı¼º
+    // ì†Œì¼“ ìƒì„±
     if ((s = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
         err_quit("socket()");
 
-    // ¼­¹ö ÁÖ¼Ò ¼³Á¤
+    // ì„œë²„ ì£¼ì†Œ ì„¤ì •
     server.sin_addr.s_addr = inet_addr(server_ip);
     server.sin_family = AF_INET;
     server.sin_port = htons(port);
 
-    // ¼­¹ö¿¡ ¿¬°á
+    // ì„œë²„ì— ì—°ê²°
     if (connect(s, (struct sockaddr*)&server, sizeof(server)) < 0)
         err_quit("connect()");
 
-    // POST ¿äÃ» ¸Ş½ÃÁö ÀÛ¼º
+    // POST ìš”ì²­ ë©”ì‹œì§€ ì‘ì„±
     size_t content_length = strlen(json_data);
     snprintf(request, BUFSIZE,
         "POST %s HTTP/1.1\r\n"
         "Host: %s\r\n"
         "Content-Type: application/json\r\n"
-        "Content-Length: %zu\r\n" 
+        "Content-Length: %zu\r\n"
         "Connection: close\r\n\r\n"
         "%s",
-        path, server_ip, content_length, json_data); 
+        path, server_ip, content_length, json_data);
 
-    // ¸Ş½ÃÁö Àü¼Û
+    // ë©”ì‹œì§€ ì „ì†¡
     if (send(s, request, (int)strlen(request), 0) < 0)
         err_quit("send()");
 
-    // ¼­¹ö ÀÀ´ä ¼ö½Å
-    recv_size = recv(s, response, BUFSIZE, 0);
- 
+    // ì„œë²„ ì‘ë‹µ ìˆ˜ì‹ 
+    int total_recv_size = 0;
+    while ((recv_size = recv(s, response + total_recv_size, BUFSIZE - total_recv_size - 1, 0)) > 0)
+    {
+        total_recv_size += recv_size;
+        if (total_recv_size >= BUFSIZE - 1)
+            break;
+    }
+
     if (recv_size == SOCKET_ERROR)
     {
         err_display("recv()");
     }
-    else if (recv_size == 0)
+    else if (total_recv_size == 0)
     {
         printf("No more data received from the server.\n");
     }
     else
     {
-        // ÀÀ´ä Ãâ·Â
-        if (recv_size >= BUFSIZE)
-        {
-            // ¼ö½ÅµÈ µ¥ÀÌÅÍÀÇ Å©±â°¡ ¹öÆÛÀÇ Å©±â¸¦ ÃÊ°úÇÏ´Â °æ¿ì
-            response[BUFSIZE - 1] = '\0'; // ¹öÆÛÀÇ ³¡¿¡ null ¹®ÀÚ Ãß°¡
-        }
-        else
-        {
-            response[recv_size] = '\0'; // ¼ö½ÅµÈ µ¥ÀÌÅÍÀÇ Å©±â¿¡ ¸Â°Ô null ¹®ÀÚ Ãß°¡
-        }
+        // ì‘ë‹µ ì¶œë ¥
+        response[total_recv_size] = '\0'; // ìˆ˜ì‹ ëœ ë°ì´í„°ì˜ í¬ê¸°ì— ë§ê²Œ null ë¬¸ì ì¶”ê°€
         printf("Response received:\n%s\n", response);
     }
-    // ¼ÒÄÏ ´İ±â
+
+    // ì†Œì¼“ ë‹«ê¸°
     closesocket(s);
     WSACleanup();
 }
 
 int main(int argc, char* argv[])
 {
-    // Node.js ¼­¹ö¿¡ º¸³¾ JSON µ¥ÀÌÅÍ
+    // Node.js ì„œë²„ì— ë³´ë‚¼ JSON ë°ì´í„°
     const char* json_data = "{\"logs\":\"value1\"}";
 
-    // Node.js ¼­¹ö¿¡ POST ¿äÃ» º¸³»±â
+    // Node.js ì„œë²„ì— POST ìš”ì²­ ë³´ë‚´ê¸°
     send_post_request("127.0.0.1", 3000, "/get_logs", json_data);
 
     return 0;
