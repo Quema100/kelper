@@ -4,7 +4,7 @@ const app = express();
 
 const escapeSpecialChars = (jsonString) => {
     // 특수 문자를 이스케이프 처리
-    return jsonString.replace(/[\u0000-\u001F\u007F-\uFFFF]/g, function(match) {
+    return jsonString.replace(/[\u0000-\u001F\u007F-\uFFFF]/g, (match) => {
         return '\\u' + ('0000' + match.charCodeAt(0).toString(16)).slice(-4);
     });
 }
@@ -15,7 +15,7 @@ app.use(express.json());
 
 app.post('/get_logs', (req, res) => {
     let logs = req.body.logs; // 데이터 불러오기
-    logs = escapeSpecialChars(logs); //이스케이프 함수로 이동
+    logs = escapeSpecialChars(logs); // 이스케이프 함수로 이동
     console.log(logs)
     console.log(req.body);
     const logEntry = {
